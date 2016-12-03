@@ -1,100 +1,34 @@
 const express = require('express');
 const app = express();
 
+const AllCaps = require('./src/commands/AllCaps');
+const NumberAdder = require('./src/commands/NumberAdder');
+const SpeechWriter = require('./src/commands/SpeechWriter');
+const ItemFetcher = require('./src/commands/ItemFetcher');
+const Output = require('./src/outputs/Output');
+
 const postConfig = [];
 
+// Todo handle context of output from API
+
+// Todo command output descriptions?
 // Todo need to do type checking on input
-// Todo output descriptions?
-
-function addTwoNumbers(x, y) {
-    return parseInt(x, 10) + parseInt(y, 10);
-}
-
-class AllCaps {
-    execute(v) {
-        return v.toUpperCase();
-    }
-
-    static describe() {
-        return {
-            input: {
-                params: {
-                    text: {
-                        type: 'string',
-                        description: "This is the text that we are uppercasing",
-                        default: 'Hello world'
-                    }
-                }
-            }
-        }
-    }
-}
-
-class SpeechWriter {
-    execute(v) {
-        return 'The answer is: ' + v;
-    }
-
-    static describe() {
-        return {
-            input: {
-                params: {
-                    speech: {
-                        type: 'string',
-                        description: "This can be any string or variable that can be converted to a string",
-                        default: 'Hello world'
-                    }
-                }
-            }
-        }
-    }
-}
-
-class NumberAdder {
-    execute(x, y) {
-        return parseInt(x, 10) + parseInt(y, 10);
-    }
-
-    static describe() {
-
-        function normalizeInteger(v) {
-            return parseInt(v, 10);
-        }
-
-        return {
-            // Todo this shouldn't handle the route, it should describe what's needed as input
-            command: addNumbers,
-            input: {
-                params: {
-                    one: {
-                        name: 'one',
-                        default: 0,
-                        normalize: normalizeInteger,
-                        type: 'integer',
-                        description: 'A number to add'
-                    },
-                    two: {
-                        name: 'two',
-                        default: 0,
-                        normalize: normalizeInteger,
-                        type: 'integer',
-                        description: 'A number to add'
-                    }
-                }
-            }
-        }
-    }
-}
-
-function addNumbers(req, res, next) {
-    res.json(addTwoNumbers(req.param('one', 0), req.param('two', 0)));
-}
-
-function sayHelloWorld(req, res, next) {
-    res.send('Hello World!!')
-}
-
+// Todo make this a Map
 const getConfig = [
+    {
+        route: '/item/:id',
+        command: [ItemFetcher],
+        routeInput: [[
+            {
+                source: 'req',
+                key: 'id',
+                param: 'itemId'
+            }
+        ]],
+        output: [
+            'json'
+        ]
+    },
     {
         route: `/add/:one/:two`,
         command: [NumberAdder],
@@ -109,7 +43,11 @@ const getConfig = [
                 key: 'two',
                 param: 'two'
             }
-        ]]
+        ]],
+        output: [
+            'json',
+            'html'
+        ]
     },
     {
         route: `/descriptiveAdd/:one/:two`,
@@ -128,9 +66,13 @@ const getConfig = [
         ], [
             {
                 param: 'speech',
-                source:'command'
+                source: 'command'
             }
-        ]]
+        ]],
+        output: [
+            'json',
+            'html'
+        ]
     },
     {
         route: `/capsAdd/:one/:two`,
@@ -149,17 +91,21 @@ const getConfig = [
         ], [
             {
                 param: 'speech',
-                source:'command'
+                source: 'command'
             }
-        ],  [
+        ], [
             {
                 param: 'text',
-                source:'command'
+                source: 'command'
             }
-        ]]
+        ]],
+        output: [
+            'json'
+        ]
     }
 ];
 
+// Todo clean this up it's ugly as sin
 getConfig.forEach((routeSetting) => {
 
     let commandList = [];
@@ -179,27 +125,32 @@ getConfig.forEach((routeSetting) => {
 
                 let paramValue;
 
-                if ( v.source == 'req') {
-                    paramValue = req.param(key, paramSetting.default);
+                if (v.source == 'req') {
+                    paramValue = req.params[key] || paramSetting.default;
                 } else {
                     paramValue = req._data;
                 }
 
-                let normalizeFunc = paramSetting.normalize || (x => { return x; });
+                let normalizeFunc = paramSetting.normalize || (x => {
+                        return x;
+                    });
                 paramList.push(normalizeFunc(paramValue))
             });
-
             req._data = commandObj.execute.apply(commandObj, paramList);
             next();
+
         });
+
+
     });
 
+
     commandList.push((req, res) => {
-        res.json(req._data);
+        const outputInstance = Output.createInstance(req, res, routeSetting.output);
+        outputInstance.display(req._data);
         res.end();
     });
 
-    console.log(commandList);
     app.get.apply(app, commandList);
 });
 
