@@ -13,6 +13,9 @@ class SpeechWriter {
                         default: 'Hello world'
                     }
                 }
+            },
+            output: {
+                type: 'string'
             }
         }
     }

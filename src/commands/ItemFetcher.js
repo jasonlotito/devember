@@ -36,6 +36,14 @@ class ItemFetcher {
                         normalize: ItemFetcher.normalizeInteger
                     }
                 }
+            },
+            output: {
+                type: 'object',
+                describe: {
+                    name: 'string',
+                    price: 'integer',
+                    sizes: ['integer|string']
+                }
             }
         }
     }

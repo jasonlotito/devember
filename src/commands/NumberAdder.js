@@ -28,6 +28,9 @@ class NumberAdder {
                         description: 'A number to add'
                     }
                 }
+            },
+            output: {
+                type: 'integer'
             }
         }
     }

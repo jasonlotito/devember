@@ -1,0 +1,138 @@
+[
+  {
+    "route": "/command/:name",
+    "command": [
+      "DescribeCommand",
+      "AllCaps"
+    ],
+    "routeInput": [
+      [
+        {
+          "source": "req",
+          "key": "name",
+          "param": "commandName"
+        }
+      ],
+      [
+        {
+          "param": "text",
+          "source": "command"
+        }
+      ]
+    ],
+    "output": [
+      "json",
+      "html"
+    ]
+  },
+  {
+    "route": "/item/:id",
+    "command": [
+      "ItemFetcher"
+    ],
+    "routeInput": [
+      [
+        {
+          "source": "req",
+          "key": "id",
+          "param": "itemId"
+        }
+      ]
+    ],
+    "output": [
+      "json"
+    ]
+  },
+  {
+    "route": "/add/:one/:two",
+    "command": [
+      "NumberAdder"
+    ],
+    "routeInput": [
+      [
+        {
+          "source": "req",
+          "key": "one",
+          "param": "one"
+        },
+        {
+          "source": "req",
+          "key": "two",
+          "param": "two"
+        }
+      ]
+    ],
+    "output": [
+      "json",
+      "html"
+    ]
+  },
+  {
+    "route": "/descriptiveAdd/:one/:two",
+    "command": [
+      "NumberAdder",
+      "SpeechWriter"
+    ],
+    "routeInput": [
+      [
+        {
+          "source": "req",
+          "key": "one",
+          "param": "one"
+        },
+        {
+          "source": "req",
+          "key": "two",
+          "param": "two"
+        }
+      ],
+      [
+        {
+          "param": "speech",
+          "source": "command"
+        }
+      ]
+    ],
+    "output": [
+      "json",
+      "html"
+    ]
+  },
+  {
+    "route": "/capsAdd/:one/:two",
+    "command": [
+      "NumberAdder",
+      "SpeechWriter",
+      "AllCaps"
+    ],
+    "routeInput": [
+      [
+        {
+          "source": "req",
+          "key": "one",
+          "param": "one"
+        },
+        {
+          "source": "req",
+          "key": "two",
+          "param": "two"
+        }
+      ],
+      [
+        {
+          "param": "speech",
+          "source": "command"
+        }
+      ],
+      [
+        {
+          "param": "text",
+          "source": "command"
+        }
+      ]
+    ],
+    "output": [
+      "json"
+    ]
+  }
+]

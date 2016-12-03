@@ -8,12 +8,20 @@ class HTMLOutput {
 
     display(data) {
         this.res.set('Content-Type', 'text/html');
+        console.log(data);
 
         switch (typeof data) {
             case 'object':
                 this.res.send(JSON.stringify(data));
                 break;
             case 'number':
+                this.res.send(data + '');
+                break;
+            case 'string':
+                this.res.send(data);
+                break;
+
+            default:
                 this.res.send(data + '');
                 break;
         }

@@ -1,6 +1,10 @@
 class AllCaps {
     execute(v) {
-        return v.toUpperCase();
+        if ( typeof v == 'object' ) {
+            return JSON.stringify(v).toUpperCase();
+        } else {
+            return v.toUpperCase();
+        }
     }
 
     static describe() {
@@ -13,6 +17,9 @@ class AllCaps {
                         default: 'Hello world'
                     }
                 }
+            },
+            output: {
+                type: 'string'
             }
         }
     }

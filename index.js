@@ -1,109 +1,21 @@
-const express = require('express');
-const app = express();
+const getConfig = require('./etc/routes.json');
 
+const express = require('express');
 const AllCaps = require('./src/commands/AllCaps');
 const NumberAdder = require('./src/commands/NumberAdder');
 const SpeechWriter = require('./src/commands/SpeechWriter');
 const ItemFetcher = require('./src/commands/ItemFetcher');
+const DescribeCommand = require('./src/commands/DescribeCommand');
 const Output = require('./src/outputs/Output');
 
-const postConfig = [];
+const app = express();
 
-// Todo handle context of output from API
-
-// Todo command output descriptions?
-// Todo need to do type checking on input
-// Todo make this a Map
-const getConfig = [
-    {
-        route: '/item/:id',
-        command: [ItemFetcher],
-        routeInput: [[
-            {
-                source: 'req',
-                key: 'id',
-                param: 'itemId'
-            }
-        ]],
-        output: [
-            'json'
-        ]
-    },
-    {
-        route: `/add/:one/:two`,
-        command: [NumberAdder],
-        routeInput: [[
-            {
-                source: 'req',
-                key: 'one',
-                param: 'one'
-            },
-            {
-                source: 'req',
-                key: 'two',
-                param: 'two'
-            }
-        ]],
-        output: [
-            'json',
-            'html'
-        ]
-    },
-    {
-        route: `/descriptiveAdd/:one/:two`,
-        command: [NumberAdder, SpeechWriter],
-        routeInput: [[
-            {
-                source: 'req',
-                key: 'one',
-                param: 'one'
-            },
-            {
-                source: 'req',
-                key: 'two',
-                param: 'two'
-            }
-        ], [
-            {
-                param: 'speech',
-                source: 'command'
-            }
-        ]],
-        output: [
-            'json',
-            'html'
-        ]
-    },
-    {
-        route: `/capsAdd/:one/:two`,
-        command: [NumberAdder, SpeechWriter, AllCaps],
-        routeInput: [[
-            {
-                source: 'req',
-                key: 'one',
-                param: 'one'
-            },
-            {
-                source: 'req',
-                key: 'two',
-                param: 'two'
-            }
-        ], [
-            {
-                param: 'speech',
-                source: 'command'
-            }
-        ], [
-            {
-                param: 'text',
-                source: 'command'
-            }
-        ]],
-        output: [
-            'json'
-        ]
-    }
-];
+const commandMap = new Map();
+commandMap.set('AllCaps', AllCaps);
+commandMap.set('NumberAdder', NumberAdder);
+commandMap.set('SpeechWriter', SpeechWriter);
+commandMap.set('ItemFetcher', ItemFetcher);
+commandMap.set('DescribeCommand', DescribeCommand);
 
 // Todo clean this up it's ugly as sin
 getConfig.forEach((routeSetting) => {
@@ -111,7 +23,12 @@ getConfig.forEach((routeSetting) => {
     let commandList = [];
     commandList.push(routeSetting.route);
 
-    routeSetting.command.forEach((command, k) => {
+    routeSetting.command.forEach((commandName, k) => {
+        if ( !commandMap.has(commandName) ) {
+            throw new Error(`Command '${commandName}' is missing. Required by route ${routeSetting.route}.`)
+        }
+
+        const command = commandMap.get(commandName);
         const commandObj = new command();
 
         // TODO We need to make this flexible and fix it
@@ -127,8 +44,11 @@ getConfig.forEach((routeSetting) => {
 
                 if (v.source == 'req') {
                     paramValue = req.params[key] || paramSetting.default;
-                } else {
+                } else if (v.source == 'command') {
                     paramValue = req._data;
+                } else if (v.source.startsWith('command.')) {
+                    console.log(req._data);
+                    paramValue = req._data.description;
                 }
 
                 let normalizeFunc = paramSetting.normalize || (x => {
@@ -138,10 +58,7 @@ getConfig.forEach((routeSetting) => {
             });
             req._data = commandObj.execute.apply(commandObj, paramList);
             next();
-
         });
-
-
     });
 
 
