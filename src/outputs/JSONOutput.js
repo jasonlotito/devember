@@ -6,7 +6,21 @@ class JSONOutput {
 
     display(data) {
         this.res.set('Content-Type', 'application/json');
-        this.res.json(data);
+        if ( data[Symbol.iterator] ) {
+            let d;
+            const commandList = [];
+            while(d = data.next()) {
+                if ( d.done ) {
+                    break;
+                }
+                commandList.push(d.value)
+            }
+
+            this.res.json(commandList);
+        } else {
+            this.res.json(data);
+        }
+
     }
 
     static describe() {

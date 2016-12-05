@@ -27,6 +27,7 @@ class ItemFetcher {
 
     static describe() {
         return {
+            description: 'Sample command to fetch item information.',
             input: {
                 params: {
                     itemId: {

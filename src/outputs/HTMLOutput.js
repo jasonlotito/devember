@@ -8,7 +8,6 @@ class HTMLOutput {
 
     display(data) {
         this.res.set('Content-Type', 'text/html');
-        console.log(data);
 
         switch (typeof data) {
             case 'object':

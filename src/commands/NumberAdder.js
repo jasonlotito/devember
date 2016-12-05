@@ -10,7 +10,7 @@ class NumberAdder {
         }
 
         return {
-            // Todo this shouldn't handle the route, it should describe what's needed as input
+            description: 'Given two numbers, it will add them together',
             input: {
                 params: {
                     one: {

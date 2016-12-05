@@ -5,6 +5,7 @@ class SpeechWriter {
 
     static describe() {
         return {
+            description: 'Prepends text with "The answer is: "',
             input: {
                 params: {
                     speech: {

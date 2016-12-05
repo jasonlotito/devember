@@ -9,6 +9,7 @@ class AllCaps {
 
     static describe() {
         return {
+            description: 'Converts a string into all caps.',
             input: {
                 params: {
                     text: {

@@ -1,21 +1,11 @@
 const getConfig = require('./etc/routes.json');
 
 const express = require('express');
-const AllCaps = require('./src/commands/AllCaps');
-const NumberAdder = require('./src/commands/NumberAdder');
-const SpeechWriter = require('./src/commands/SpeechWriter');
-const ItemFetcher = require('./src/commands/ItemFetcher');
-const DescribeCommand = require('./src/commands/DescribeCommand');
 const Output = require('./src/outputs/Output');
 
 const app = express();
 
-const commandMap = new Map();
-commandMap.set('AllCaps', AllCaps);
-commandMap.set('NumberAdder', NumberAdder);
-commandMap.set('SpeechWriter', SpeechWriter);
-commandMap.set('ItemFetcher', ItemFetcher);
-commandMap.set('DescribeCommand', DescribeCommand);
+const commandMap = require('./src/commands/Commands');
 
 // Todo clean this up it's ugly as sin
 getConfig.forEach((routeSetting) => {
@@ -35,32 +25,34 @@ getConfig.forEach((routeSetting) => {
         commandList.push((req, res, next) => {
             const paramList = [];
 
-            routeSetting.routeInput[k].forEach((v) => {
-                const key = v.key;
-                const param = v.param;
-                const paramSetting = command.describe().input.params[param];
+            if ( routeSetting && routeSetting.routeInput && k in routeSetting.routeInput ) {
+                routeSetting.routeInput[k].forEach((v) => {
+                    const key = v.key;
+                    const param = v.param;
+                    const paramSetting = command.describe().input.params[param];
 
-                let paramValue;
+                    let paramValue;
 
-                if (v.source == 'req') {
-                    paramValue = req.params[key] || paramSetting.default;
-                } else if (v.source == 'command') {
-                    paramValue = req._data;
-                } else if (v.source.startsWith('command.')) {
-                    console.log(req._data);
-                    paramValue = req._data.description;
-                }
+                    if (v.source == 'req') {
+                        paramValue = req.params[key] || paramSetting.default;
+                    } else if (v.source == 'command') {
+                        paramValue = req._data;
+                    } else if (v.source.startsWith('command.')) {
+                        console.log(req._data);
+                        paramValue = req._data.description;
+                    }
 
-                let normalizeFunc = paramSetting.normalize || (x => {
-                        return x;
-                    });
-                paramList.push(normalizeFunc(paramValue))
-            });
+                    let normalizeFunc = paramSetting.normalize || (x => {
+                            return x;
+                        });
+                    paramList.push(normalizeFunc(paramValue))
+                });
+            }
+
             req._data = commandObj.execute.apply(commandObj, paramList);
             next();
         });
     });
-
 
     commandList.push((req, res) => {
         const outputInstance = Output.createInstance(req, res, routeSetting.output);
@@ -70,6 +62,8 @@ getConfig.forEach((routeSetting) => {
 
     app.get.apply(app, commandList);
 });
+
+app.use(express.static('public'));
 
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!')

@@ -1,9 +1,17 @@
 [
   {
+    "route": "/commands",
+    "command": [
+      "ListCommands"
+    ],
+    "output": [
+      "json"
+    ]
+  },
+  {
     "route": "/command/:name",
     "command": [
-      "DescribeCommand",
-      "AllCaps"
+      "DescribeCommand"
     ],
     "routeInput": [
       [
@@ -11,12 +19,6 @@
           "source": "req",
           "key": "name",
           "param": "commandName"
-        }
-      ],
-      [
-        {
-          "param": "text",
-          "source": "command"
         }
       ]
     ],
