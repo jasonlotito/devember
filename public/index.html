@@ -8,16 +8,29 @@
     <title>Devember</title>
 </head>
 <body>
-<div id="content"></div>
+<div id="content">
+    <h2>Commands</h2>
+    <ul id="commandList"></ul>
+    <h2>Routes</h2>
+    <ul id="routeList"></ul>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script>
-    $.get('/commands', function(data) {
-        let htmlData = '<ul>';
+    $.get('/commands', (data) => {
+        let htmlData = '';
         data.forEach(v => {
             htmlData += `<li><a href="/command.html?command=${v}">${v}</a></li>`;
         });
 
-       $('#content').html(htmlData);
+       $('#commandList').html(htmlData);
+    });
+
+    $.get('/routes', (data) => {
+        let routesListHtml = '';
+        data.forEach(v => {
+           routesListHtml += `<li><a href="/route.html?route=${encodeURI(v)}">${v}</a></li>`;
+        });
+        $('#routeList').html(routesListHtml);
     });
 </script>
 </body>

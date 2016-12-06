@@ -9,7 +9,8 @@ class JSONOutput {
         if ( data[Symbol.iterator] ) {
             let d;
             const commandList = [];
-            while(d = data.next()) {
+            const iterator = data[Symbol.iterator]();
+            while(d = iterator.next()) {
                 if ( d.done ) {
                     break;
                 }

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Devember</title>
+</head>
+<body>
+<nav>
+    <a href="/index.html">Home</a>
+</nav>
+<div id="content"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    let urlParams;
+    (window.onpopstate = function () {
+        let match,
+            pl = /\+/g,  // Regex for replacing addition symbol with a space
+            search = /([^&=]+)=?([^&]*)/g,
+            decode = function (s) {
+                return decodeURIComponent(s.replace(pl, " "));
+            },
+            query = window.location.search.substring(1);
+
+        urlParams = {};
+        while (match = search.exec(query))
+            urlParams[decode(match[1])] = decode(match[2]);
+    })();
+
+    $.getJSON(`/route/${encodeURIComponent(urlParams['route'])}`, function (data) {
+
+        let commandHtml = [];
+        data.command.forEach(command => {
+            commandHtml.push(`<a href="/command.html?command=${command}">${command}</a>`);
+        });
+
+        let htmlData = `<div id="command">
+    <h1>Route: ${data.route}</h1>
+    <h2>Command List</h2>
+    <p>${commandHtml.join(', ')}</p>
+
+</div>
+`;
+
+        $('#content').html(htmlData);
+    });
+</script>
+</body>
+</html>

@@ -1,5 +1,32 @@
 [
   {
+    "route": "/route/:name",
+    "command": [
+      "DescribeRoute"
+    ],
+    "routeInput": [
+      [
+        {
+          "source": "req",
+          "key": "name",
+          "param": "routeName"
+        }
+      ]
+    ],
+    "output": [
+      "json"
+    ]
+  },
+  {
+    "route": "/routes",
+    "command": [
+      "ListRoutes"
+    ],
+    "output": [
+      "json"
+    ]
+  },
+  {
     "route": "/commands",
     "command": [
       "ListCommands"

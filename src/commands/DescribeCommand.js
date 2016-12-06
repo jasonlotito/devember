@@ -1,7 +1,7 @@
+
 class DescribeCommand {
     execute(commandName) {
-        const command = require(`./${commandName}`);
-        return command.describe();
+        return require('./Commands').get(commandName).describe();
     }
 
     static describe() {
