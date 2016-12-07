@@ -4,9 +4,16 @@
   "description": "Function based UI tool for node.js",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-loader": "^6.2.8",
+    "webpack": "^1.13.3"
+  },
   "scripts": {
     "start": "node index.js"
   },
