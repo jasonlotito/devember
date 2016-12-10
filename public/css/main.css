@@ -1,14 +1,28 @@
 body {
-    font-family:Verdana, Geneva, sans-serif;
-    font-size:10pt;
-    color:#828282;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 10pt;
+    padding: 0;
+    margin: 0;
 }
+
+a {
+    text-decoration: none;
+    color: #808080;
+    font-weight: bold;
+    border-bottom: 1px #808080 dotted;
+}
+
+a:hover {
+    background-color: #e7e7e7;
+}
+
 .route-command-list {
     display: inline;
     padding: 0;
 }
-.route-command-list li{
-    display:inline;
+
+.route-command-list li {
+    display: inline;
     margin-right: .5em;
 }
 
@@ -16,6 +30,49 @@ body {
     margin: 0;
 }
 
-h1, h2 {font-size: 12pt; padding: 0; margin: 1em 0 0 0;}
-h1, h2:first-child {margin-top: 0;}
-h1 {font-size:14pt;}
+h1, h2 {
+    font-size: 12pt;
+    padding: 0;
+    margin: 1em 0 0 0;
+}
+
+h1, h2:first-child {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 14pt;
+}
+
+.mainNav a {
+    color: #e7e7e7;
+    border-bottom: none;
+}
+
+.mainNav a:hover {
+    background-color: transparent;
+}
+
+.mainNav {
+    margin: 0;
+    padding: 2px 4px;
+    color: #cfcfcf;
+    background-color: #242424;
+}
+
+.homePageLink {
+    font-size: 12pt;
+}
+
+.mainNav li {
+    display: inline;
+    margin-left: 1em;
+}
+
+.mainNav li:first-child {
+    margin-left: 0;
+}
+
+.homePage {
+    padding: 2px 4px;
+}

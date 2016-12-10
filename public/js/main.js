@@ -30,15 +30,11 @@ let CommandItem = React.createClass({
         }
     },
     componentDidMount: function () {
-        console.log(this)
-        $.getJSON('/command/' + this.props.params.command, (data) => {
-            console.log(data);
-            this.setState({data: data})
-        });
+        $.getJSON('/command/' + this.props.params.command, data => this.setState({data: data}) );
     },
     render: function () {
         return (
-            <div>
+            <div className="homePage">
                 <h1>Command: {this.props.params.command}</h1>
                 <h2>Description</h2>
                 <p>{this.state.data.description ? this.state.data.description : 'Description not found.'}</p>
@@ -46,7 +42,8 @@ let CommandItem = React.createClass({
                 <ParamList paramList={this.state.data.input.params}/>
                 <h2>Output</h2>
                 <p>{this.state.data.output.type}</p>
-            </div>)
+            </div>
+        )
     }
 });
 
@@ -66,33 +63,30 @@ function RouteInputItemList(props) {
     const routeInput = props.routeInput.map((routeInputs, k) => {
         const commandName = props.commands[k];
 
-        const inputLists = routeInputs.map((route, keyId) => {
-            console.log(route);
-            return (
-                <ul>
-                    <li>
-                        Param {keyId}
-                        <RouteInputItem route={route}/>
-                    </li>
-                </ul>
-            )
-        });
+        const inputLists = routeInputs.map((route, keyId) =>
+            <ul>
+                <li>
+                    Param {keyId}
+                    <RouteInputItem route={route}/>
+                </li>
+            </ul>
+        );
 
-        const href = `/command/${commandName}`;
-        return (<ul key={k}>
-            <li><Link to={href}>{commandName}</Link> {inputLists}</li>
-        </ul>)
+        return (
+            <ul key={k}>
+                <li><Link to={'/command/' + commandName}>{commandName}</Link> {inputLists}</li>
+            </ul>
+        )
     });
 
     return (<div>{routeInput}</div>)
 }
 
 function CommandListItem(data) {
-    console.log(data);
-    const commandList = data.commandList.map( command => {
-        const href = `/command/${command}`;
-        return (<li><Link to={href}>{command}</Link></li>);
-    });
+    console.log('CommandList', data.commandList);
+    const commandList = data.commandList.map(commandName =>
+        <li><Link to={'/command/' + commandName}>{commandName}</Link></li>
+    );
 
     return (
         <ul className="route-command-list">{commandList}</ul>
@@ -111,13 +105,12 @@ let RouteItem = React.createClass({
         }
     },
     componentDidMount: function () {
-        $.getJSON('/route/' + encodeURIComponent(this.props.params.route), data => {
-            this.setState({data: data});
-        });
+        const encodedRoute = encodeURIComponent(this.props.params.route);
+        $.getJSON('/route/' + encodedRoute, data => this.setState({data: data}) );
     },
     render: function () {
         return (
-            <div>
+            <div className="homePage">
                 <h1>Route: {this.state.data.route}</h1>
                 <p>Commands: <CommandListItem commandList={this.state.data.command}/></p>
                 <RouteInputItemList routeInput={this.state.data.routeInput} commands={this.state.data.command}/>
@@ -133,20 +126,12 @@ let CommandList = React.createClass({
         }
     },
     componentDidMount: function () {
-        $.getJSON('/commands', (data) => {
-            this.setState({data})
-        });
-    },
-    handleClick: function (e) {
-        // e.preventDefault();
+        $.getJSON('/commands', data => this.setState({data}));
     },
     render: function () {
-        let items = this.state.data.map((item, key) => {
-            const href = '/command/' + encodeURIComponent(item);
-            return (
-                <li key={key}><Link to={href}>{item}</Link></li>
-            )
-        });
+        let items = this.state.data.map((item, key) =>
+            <li key={key}><Link to={'/command/' + item}>{item}</Link></li>
+        );
 
         return (
             <ul>
@@ -168,12 +153,9 @@ let RouteList = React.createClass({
         });
     },
     render: function () {
-        let items = this.state.data.map((item, key) => {
-            const href = '/route/' + encodeURIComponent(item);
-            return (
-                <li key={key}><Link to={href}>{item}</Link></li>
-            )
-        });
+        let items = this.state.data.map((item, key) =>
+            <li key={key}><Link to={'/route/' + encodeURIComponent(item)}>{item}</Link></li>
+        );
 
         return (
             <ul>
@@ -187,12 +169,11 @@ let Page = React.createClass({
     render: function () {
         return (
             <div className="homePage">
-                <h1>Home</h1>
                 <nav>
-                <h2>Commands</h2>
-                <CommandList/>
-                <h2>Routes</h2>
-                <RouteList/>
+                    <h2>Commands</h2>
+                    <CommandList/>
+                    <h2>Routes</h2>
+                    <RouteList/>
                 </nav>
             </div>
         )
@@ -202,6 +183,10 @@ let App = React.createClass({
     render: function () {
         return (
             <div>
+                <ul className="mainNav">
+                    <li><Link className="homePageLink" to={'/'}>Devember</Link></li>
+                    <li><Link to={'/asdf'}>Asdf</Link></li>
+                </ul>
                 {this.props.children}
             </div>
         )
@@ -221,8 +206,8 @@ ReactDOM.render(
     <Router history={browserHistory}>
         <Route path="/" component={App}>
             <IndexRoute component={Page}/>
-            <Route path="Route/:route" component={RouteItem}/>
-            <Route path="Command/:command" component={CommandItem}/>
+            <Route path="route/:route" component={RouteItem}/>
+            <Route path="command/:command" component={CommandItem}/>
         </Route>
     </Router>,
     document.getElementById('content')

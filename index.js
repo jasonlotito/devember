@@ -1,70 +1,91 @@
-const getConfig = require('./etc/routes.json');
+const getConfig = require( './etc/routes.json' );
 
-const express = require('express');
-const Output = require('./src/outputs/Output');
+const express = require( 'express' );
+const Output  = require( './src/outputs/Output' );
 
 const app = express();
 
-const commandMap = require('./src/commands/Commands');
+const commandMap = require( './src/commands/Commands' );
 
 // Todo clean this up it's ugly as sin
-getConfig.forEach((routeSetting) => {
+getConfig.forEach( ( routeSetting ) => {
 
-    let commandList = [];
-    commandList.push(routeSetting.route);
+  let commandList = [];
 
-    routeSetting.command.forEach((commandName, k) => {
-        if ( !commandMap.has(commandName) ) {
-            throw new Error(`Command '${commandName}' is missing. Required by route ${routeSetting.route}.`)
+  commandList.push( routeSetting.route );
+
+  commandList.push( ( req, res, next ) => {
+    const acceptHeaders = req.accepts();
+
+    if ( acceptHeaders.includes('application/json') ) {
+      console.log('json request');
+       next();
+    } else {
+      console.log('send file ', acceptHeaders);
+      var options = {
+        root: __dirname + '/public/',
+        dotfiles: 'deny',
+        headers: {
+          'x-timestamp': Date.now(),
+          'x-sent': true
         }
+      };
+      res.sendFile('index.html', options);
+    }
+  } );
 
-        const command = commandMap.get(commandName);
-        const commandObj = new command();
+  routeSetting.command.forEach( ( commandName, k ) => {
+    if ( !commandMap.has( commandName ) ) {
+      throw new Error( `Command '${commandName}' is missing. Required by route ${routeSetting.route}.` )
+    }
 
-        // TODO We need to make this flexible and fix it
-        commandList.push((req, res, next) => {
-            const paramList = [];
+    const command    = commandMap.get( commandName );
+    const commandObj = new command();
 
-            if ( routeSetting && routeSetting.routeInput && k in routeSetting.routeInput ) {
-                routeSetting.routeInput[k].forEach((v) => {
-                    const key = v.key;
-                    const param = v.param;
-                    const paramSetting = command.describe().input.params[param];
+    // TODO We need to make this flexible and fix it
+    commandList.push( ( req, res, next ) => {
+      const paramList = [];
 
-                    let paramValue;
+      if ( routeSetting && routeSetting.routeInput && k in routeSetting.routeInput ) {
+        routeSetting.routeInput[k].forEach( ( v ) => {
+          const key          = v.key;
+          const param        = v.param;
+          const paramSetting = command.describe().input.params[param];
 
-                    if (v.source == 'req') {
-                        paramValue = req.params[key] || paramSetting.default;
-                    } else if (v.source == 'command') {
-                        paramValue = req._data;
-                    } else if (v.source.startsWith('command.')) {
-                        console.log(req._data);
-                        paramValue = req._data.description;
-                    }
+          let paramValue;
 
-                    let normalizeFunc = paramSetting.normalize || (x => {
-                            return x;
-                        });
-                    paramList.push(normalizeFunc(paramValue))
-                });
-            }
+          if ( v.source == 'req' ) {
+            paramValue = req.params[key] || paramSetting.default;
+          } else if ( v.source == 'command' ) {
+            paramValue = req._data;
+          } else if ( v.source.startsWith( 'command.' ) ) {
+            console.log( req._data );
+            paramValue = req._data.description;
+          }
 
-            req._data = commandObj.execute.apply(commandObj, paramList);
-            next();
-        });
-    });
+          let normalizeFunc = paramSetting.normalize || (x => {
+              return x;
+            });
+          paramList.push( normalizeFunc( paramValue ) )
+        } );
+      }
 
-    commandList.push((req, res) => {
-        const outputInstance = Output.createInstance(req, res, routeSetting.output);
-        outputInstance.display(req._data);
-        res.end();
-    });
+      req._data = commandObj.execute.apply( commandObj, paramList );
+      next();
+    } );
+  } );
 
-    app.get.apply(app, commandList);
-});
+  commandList.push( ( req, res ) => {
+    const outputInstance = Output.createInstance( req, res, routeSetting.output );
+    outputInstance.display( req._data );
+    res.end();
+  } );
 
-app.use(express.static('public'));
+  app.get.apply( app, commandList );
+} );
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!')
-});
+app.use( express.static( 'public' ) );
+
+app.listen( 3000, function () {
+  console.log( 'Example app listening on port 3000!' )
+} );
