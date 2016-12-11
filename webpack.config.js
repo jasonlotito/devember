@@ -13,7 +13,7 @@ module.exports = {
     loaders: [
       {
         test: /\.jsx?/,
-        include: APP_DIR,
+        include: [APP_DIR, APP_DIR + '/comp'],
         loader: 'babel'
       }
     ]

@@ -1,14 +1,14 @@
 import React from 'react';
 import RouteInputItem from './RouteInputItem'
-import Link from 'react-router'
+import {Link} from 'react-router'
 
 class RouteInputItemList extends React.Component {
   render() {
-    console.log(this.props);
     const routeInput = this.props.routeInput.map( ( routeInputs, k ) => {
       const commandName = this.props.commands[k];
+
       const inputLists  = routeInputs.map( ( route, keyId ) =>
-        <ul>
+        <ul key={keyId}>
           <li>
             Param {keyId}
             <RouteInputItem route={route}/>
@@ -25,7 +25,7 @@ class RouteInputItemList extends React.Component {
 
     console.log(routeInput);
     return (<div>{routeInput}</div>)
-  }b
+  }
 }
 
 export default RouteInputItemList
