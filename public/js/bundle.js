@@ -49,14 +49,6 @@
 
 	'use strict';
 	
-	var _CommandItem = __webpack_require__(/*! ./comp/CommandItem */ 1);
-	
-	var _CommandItem2 = _interopRequireDefault(_CommandItem);
-	
-	var _RouteInputItemList = __webpack_require__(/*! ./comp/RouteInputItemList */ 236);
-	
-	var _RouteInputItemList2 = _interopRequireDefault(_RouteInputItemList);
-	
 	var _react = __webpack_require__(/*! react */ 2);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -67,282 +59,38 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 181);
 	
+	var _CommandItem = __webpack_require__(/*! ./comp/CommandItem */ 1);
+	
+	var _CommandItem2 = _interopRequireDefault(_CommandItem);
+	
+	var _RouteItem = __webpack_require__(/*! ./comp/RouteItem */ 241);
+	
+	var _RouteItem2 = _interopRequireDefault(_RouteItem);
+	
+	var _Page = __webpack_require__(/*! ./comp/Page */ 238);
+	
+	var _Page2 = _interopRequireDefault(_Page);
+	
+	var _App = __webpack_require__(/*! ./comp/App */ 237);
+	
+	var _App2 = _interopRequireDefault(_App);
+	
+	var _Builder = __webpack_require__(/*! ./comp/Builder */ 239);
+	
+	var _Builder2 = _interopRequireDefault(_Builder);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	// import RouteInputItem from './comp/RouteInputItem'
-	
-	function RouteInputItem2(data) {
-	  var route = data.route;
-	  return _react2.default.createElement(
-	    'ul',
-	    null,
-	    _react2.default.createElement(
-	      'li',
-	      null,
-	      'Source: ',
-	      route.source
-	    ),
-	    _react2.default.createElement(
-	      'li',
-	      null,
-	      'Key: ',
-	      route.key
-	    ),
-	    _react2.default.createElement(
-	      'li',
-	      null,
-	      'Param: ',
-	      route.param
-	    )
-	  );
-	}
-	
-	function RouteInputItemList2(props) {
-	  var routeInput = props.routeInput.map(function (routeInputs, k) {
-	    var commandName = props.commands[k];
-	    var inputLists = routeInputs.map(function (route, keyId) {
-	      return _react2.default.createElement(
-	        'ul',
-	        null,
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          'Param ',
-	          keyId,
-	          _react2.default.createElement(RouteInputItem, { route: route })
-	        )
-	      );
-	    });
-	
-	    return _react2.default.createElement(
-	      'ul',
-	      { key: k },
-	      _react2.default.createElement(
-	        'li',
-	        null,
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/command/' + commandName },
-	          commandName
-	        ),
-	        ' ',
-	        inputLists
-	      )
-	    );
-	  });
-	
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    routeInput
-	  );
-	}
-	
-	function CommandListItem(data) {
-	  console.log('CommandList', data.commandList);
-	  var commandList = data.commandList.map(function (commandName) {
-	    return _react2.default.createElement(
-	      'li',
-	      null,
-	      _react2.default.createElement(
-	        _reactRouter.Link,
-	        { to: '/command/' + commandName },
-	        commandName
-	      )
-	    );
-	  });
-	
-	  return _react2.default.createElement(
-	    'ul',
-	    { className: 'route-command-list' },
-	    commandList
-	  );
-	}
-	
-	var RouteItem = _react2.default.createClass({
-	  displayName: 'RouteItem',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      data: {
-	        route: '',
-	        command: [],
-	        commandString: '',
-	        routeInput: []
-	      }
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this = this;
-	
-	    var encodedRoute = encodeURIComponent(this.props.params.route);
-	    $.getJSON('/route/' + encodedRoute, function (data) {
-	      return _this.setState({ data: data });
-	    });
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'homePage' },
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        'Route: ',
-	        this.state.data.route
-	      ),
-	      _react2.default.createElement(
-	        'p',
-	        null,
-	        'Commands: ',
-	        _react2.default.createElement(CommandListItem, { commandList: this.state.data.command })
-	      ),
-	      _react2.default.createElement(_RouteInputItemList2.default, { routeInput: this.state.data.routeInput,
-	        commands: this.state.data.command })
-	    );
-	  }
-	});
-	
-	var CommandList = _react2.default.createClass({
-	  displayName: 'CommandList',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      data: []
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    var _this2 = this;
-	
-	    $.getJSON('/commands', function (data) {
-	      return _this2.setState({ data: data });
-	    });
-	  },
-	  render: function render() {
-	    var items = this.state.data.map(function (item, key) {
-	      return _react2.default.createElement(
-	        'li',
-	        { key: key },
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/command/' + item },
-	          item
-	        )
-	      );
-	    });
-	
-	    return _react2.default.createElement(
-	      'ul',
-	      null,
-	      items
-	    );
-	  }
-	});
-	
-	var RouteList = _react2.default.createClass({
-	  displayName: 'RouteList',
-	  getInitialState: function getInitialState() {
-	    return {
-	      data: []
-	    };
-	  },
-	
-	  componentDidMount: function componentDidMount() {
-	    var _this3 = this;
-	
-	    $.getJSON('/routes', function (data) {
-	      _this3.setState({ data: data });
-	    });
-	  },
-	  render: function render() {
-	    var items = this.state.data.map(function (item, key) {
-	      return _react2.default.createElement(
-	        'li',
-	        { key: key },
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/route/' + encodeURIComponent(item) },
-	          item
-	        )
-	      );
-	    });
-	
-	    return _react2.default.createElement(
-	      'ul',
-	      null,
-	      items
-	    );
-	  }
-	});
-	
-	var Page = _react2.default.createClass({
-	  displayName: 'Page',
-	
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'homePage' },
-	      _react2.default.createElement(
-	        'nav',
-	        null,
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Commands'
-	        ),
-	        _react2.default.createElement(CommandList, null),
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Routes'
-	        ),
-	        _react2.default.createElement(RouteList, null)
-	      )
-	    );
-	  }
-	});
-	var App = _react2.default.createClass({
-	  displayName: 'App',
-	
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'ul',
-	        { className: 'mainNav' },
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { className: 'homePageLink', to: '/' },
-	            'Devember'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: '/asdf' },
-	            'Asdf'
-	          )
-	        )
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
 	
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
 	  _react2.default.createElement(
 	    _reactRouter.Route,
-	    { path: '/', component: App },
-	    _react2.default.createElement(_reactRouter.IndexRoute, { component: Page }),
-	    _react2.default.createElement(_reactRouter.Route, { path: 'route/:route', component: RouteItem }),
-	    _react2.default.createElement(_reactRouter.Route, { path: 'command/:command', component: _CommandItem2.default })
+	    { path: '/', component: _App2.default },
+	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _Page2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'route/:route', component: _RouteItem2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'command/:command', component: _CommandItem2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'builder', component: _Builder2.default })
 	  )
 	), document.getElementById('content'));
 
@@ -385,13 +133,13 @@
 	
 	    var _this = _possibleConstructorReturn(this, (CommandItem.__proto__ || Object.getPrototypeOf(CommandItem)).call(this, props));
 	
-	    _this.state = _this.getInitialState();
+	    _this.state = _this.fetchState();
 	    return _this;
 	  }
 	
 	  _createClass(CommandItem, [{
-	    key: 'getInitialState',
-	    value: function getInitialState() {
+	    key: 'fetchState',
+	    value: function fetchState() {
 	      return {
 	        data: {
 	          command: '',
@@ -4644,30 +4392,34 @@
 	        var param = paramList[paramName];
 	        return _react2.default.createElement(
 	          'ul',
-	          null,
+	          { key: paramName },
 	          _react2.default.createElement(
 	            'li',
 	            null,
 	            'Param Name: ',
-	            paramName
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Type: ',
-	            param.type
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Description: ',
-	            param.description
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'Default Value: ',
-	            param.default
+	            paramName,
+	            _react2.default.createElement(
+	              'ul',
+	              null,
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Type: ',
+	                param.type
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Description: ',
+	                param.description
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                null,
+	                'Default Value: ',
+	                param.default
+	              )
+	            )
 	          )
 	        );
 	      });
@@ -27719,6 +27471,596 @@
 	}(_react2.default.Component);
 	
 	exports.default = RouteInputItemList;
+
+/***/ },
+/* 237 */
+/*!*******************************!*\
+  !*** ./public/js/comp/App.js ***!
+  \*******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 181);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var App = function (_React$Component) {
+	  _inherits(App, _React$Component);
+	
+	  function App() {
+	    _classCallCheck(this, App);
+	
+	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+	  }
+	
+	  _createClass(App, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'mainNav' },
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { className: 'homePageLink', to: '/' },
+	              'Devember'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/builder' },
+	              'Router Builder'
+	            )
+	          )
+	        ),
+	        this.props.children
+	      );
+	    }
+	  }]);
+	
+	  return App;
+	}(_react2.default.Component);
+	
+	exports.default = App;
+
+/***/ },
+/* 238 */
+/*!********************************!*\
+  !*** ./public/js/comp/Page.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _CommandList = __webpack_require__(/*! ./CommandList */ 242);
+	
+	var _CommandList2 = _interopRequireDefault(_CommandList);
+	
+	var _RouteList = __webpack_require__(/*! ./RouteList */ 240);
+	
+	var _RouteList2 = _interopRequireDefault(_RouteList);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Page = function (_React$Component) {
+	  _inherits(Page, _React$Component);
+	
+	  function Page() {
+	    _classCallCheck(this, Page);
+	
+	    return _possibleConstructorReturn(this, (Page.__proto__ || Object.getPrototypeOf(Page)).apply(this, arguments));
+	  }
+	
+	  _createClass(Page, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'homePage' },
+	        _react2.default.createElement(
+	          'nav',
+	          null,
+	          _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Commands'
+	          ),
+	          _react2.default.createElement(_CommandList2.default, null),
+	          _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Routes'
+	          ),
+	          _react2.default.createElement(_RouteList2.default, null)
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Page;
+	}(_react2.default.Component);
+	
+	exports.default = Page;
+
+/***/ },
+/* 239 */
+/*!***********************************!*\
+  !*** ./public/js/comp/Builder.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Builder = function (_React$Component) {
+	  _inherits(Builder, _React$Component);
+	
+	  function Builder() {
+	    _classCallCheck(this, Builder);
+	
+	    return _possibleConstructorReturn(this, (Builder.__proto__ || Object.getPrototypeOf(Builder)).apply(this, arguments));
+	  }
+	
+	  _createClass(Builder, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "homePage" },
+	        _react2.default.createElement(
+	          "h1",
+	          null,
+	          "Router Builder"
+	        ),
+	        _react2.default.createElement(
+	          "form",
+	          null,
+	          _react2.default.createElement(
+	            "label",
+	            null,
+	            "Router URL: ",
+	            _react2.default.createElement("input", { type: "text", defaultValue: "/adder/:num1/:num2" })
+	          ),
+	          _react2.default.createElement("br", null),
+	          _react2.default.createElement(
+	            "label",
+	            null,
+	            "Method: ",
+	            _react2.default.createElement(
+	              "select",
+	              null,
+	              _react2.default.createElement(
+	                "option",
+	                null,
+	                "GET"
+	              ),
+	              _react2.default.createElement(
+	                "option",
+	                null,
+	                "POST"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "fieldset",
+	            null,
+	            _react2.default.createElement(
+	              "legend",
+	              null,
+	              ":num1"
+	            ),
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Description: ",
+	              _react2.default.createElement("input", { type: "text" })
+	            ),
+	            _react2.default.createElement("br", null),
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Data Type: ",
+	              _react2.default.createElement(
+	                "select",
+	                null,
+	                _react2.default.createElement(
+	                  "option",
+	                  null,
+	                  "String"
+	                ),
+	                _react2.default.createElement(
+	                  "option",
+	                  null,
+	                  "Number"
+	                ),
+	                _react2.default.createElement(
+	                  "option",
+	                  null,
+	                  "Time?"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "fieldset",
+	            null,
+	            _react2.default.createElement(
+	              "legend",
+	              null,
+	              ":num2"
+	            ),
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Description: ",
+	              _react2.default.createElement("input", { type: "text" })
+	            ),
+	            _react2.default.createElement("br", null),
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Data Type: ",
+	              _react2.default.createElement(
+	                "select",
+	                null,
+	                _react2.default.createElement(
+	                  "option",
+	                  null,
+	                  "String"
+	                ),
+	                _react2.default.createElement(
+	                  "option",
+	                  null,
+	                  "Number"
+	                ),
+	                _react2.default.createElement(
+	                  "option",
+	                  null,
+	                  "Time?"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            null,
+	            "Create Route"
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Builder;
+	}(_react2.default.Component);
+	
+	exports.default = Builder;
+
+/***/ },
+/* 240 */
+/*!*************************************!*\
+  !*** ./public/js/comp/RouteList.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 181);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var RouteList = function (_React$Component) {
+	  _inherits(RouteList, _React$Component);
+	
+	  function RouteList(props) {
+	    _classCallCheck(this, RouteList);
+	
+	    var _this = _possibleConstructorReturn(this, (RouteList.__proto__ || Object.getPrototypeOf(RouteList)).call(this, props));
+	
+	    _this.state = RouteList.initialState();
+	    return _this;
+	  }
+	
+	  _createClass(RouteList, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      $.getJSON('/routes', function (data) {
+	        _this2.setState({ data: data });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var items = this.state.data.map(function (item, key) {
+	        return _react2.default.createElement(
+	          'li',
+	          { key: key },
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/route/' + encodeURIComponent(item) },
+	            item
+	          )
+	        );
+	      });
+	
+	      return _react2.default.createElement(
+	        'ul',
+	        null,
+	        items
+	      );
+	    }
+	  }], [{
+	    key: 'initialState',
+	    value: function initialState() {
+	      return {
+	        data: []
+	      };
+	    }
+	  }]);
+	
+	  return RouteList;
+	}(_react2.default.Component);
+	
+	exports.default = RouteList;
+
+/***/ },
+/* 241 */
+/*!*************************************!*\
+  !*** ./public/js/comp/RouteItem.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _CommandListItem = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./CommandListItem\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _CommandListItem2 = _interopRequireDefault(_CommandListItem);
+	
+	var _RouteInputItemList = __webpack_require__(/*! ./RouteInputItemList */ 236);
+	
+	var _RouteInputItemList2 = _interopRequireDefault(_RouteInputItemList);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var RouteItem = function (_React$Component) {
+	  _inherits(RouteItem, _React$Component);
+	
+	  function RouteItem(props) {
+	    _classCallCheck(this, RouteItem);
+	
+	    var _this = _possibleConstructorReturn(this, (RouteItem.__proto__ || Object.getPrototypeOf(RouteItem)).call(this, props));
+	
+	    _this.state = RouteItem.initialState();
+	    return _this;
+	  }
+	
+	  _createClass(RouteItem, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      var encodedRoute = encodeURIComponent(this.props.params.route);
+	      $.getJSON('/route/' + encodedRoute, function (data) {
+	        return _this2.setState({ data: data });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'homePage' },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Route: ',
+	          this.state.data.route
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Commands: ',
+	          _react2.default.createElement(_CommandListItem2.default, { commandList: this.state.data.command })
+	        ),
+	        _react2.default.createElement(_RouteInputItemList2.default, { routeInput: this.state.data.routeInput || [],
+	          commands: this.state.data.command })
+	      );
+	    }
+	  }], [{
+	    key: 'initialState',
+	    value: function initialState() {
+	      return {
+	        data: {
+	          route: '',
+	          command: [],
+	          commandString: '',
+	          routeInput: []
+	        }
+	      };
+	    }
+	  }]);
+	
+	  return RouteItem;
+	}(_react2.default.Component);
+	
+	exports.default = RouteItem;
+
+/***/ },
+/* 242 */
+/*!***************************************!*\
+  !*** ./public/js/comp/CommandList.js ***!
+  \***************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 181);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var CommandList = function (_React$Component) {
+	  _inherits(CommandList, _React$Component);
+	
+	  function CommandList(props) {
+	    _classCallCheck(this, CommandList);
+	
+	    var _this = _possibleConstructorReturn(this, (CommandList.__proto__ || Object.getPrototypeOf(CommandList)).call(this, props));
+	
+	    _this.state = CommandList.initialState();
+	    return _this;
+	  }
+	
+	  _createClass(CommandList, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      $.getJSON('/commands', function (data) {
+	        return _this2.setState({ data: data });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var items = this.state.data.map(function (item, key) {
+	        return _react2.default.createElement(
+	          'li',
+	          { key: key },
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/command/' + item },
+	            item
+	          )
+	        );
+	      });
+	
+	      return _react2.default.createElement(
+	        'ul',
+	        null,
+	        items
+	      );
+	    }
+	  }], [{
+	    key: 'initialState',
+	    value: function initialState() {
+	      return {
+	        data: []
+	      };
+	    }
+	  }]);
+	
+	  return CommandList;
+	}(_react2.default.Component);
+	
+	exports.default = CommandList;
 
 /***/ }
 /******/ ]);

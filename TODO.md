@@ -12,3 +12,4 @@
 - [ ] Aync command execution
 - [ ] Need to do type checking on input
 - [ ] Commands should be dynamically added, they should register themselves?
+- [ ] Direct 404's to index.html

@@ -5,9 +5,9 @@ import ParamList from './ParamList'
 class CommandItem extends React.Component {
   constructor(props) {
     super(props)
-    this.state = this.getInitialState();
+    this.state = this.fetchState();
   }
-  getInitialState() {
+    fetchState() {
     return {
       data: {
         command:     '',

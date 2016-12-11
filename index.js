@@ -22,7 +22,7 @@ getConfig.forEach( ( routeSetting ) => {
        next();
     } else {
       console.log('send file ', acceptHeaders);
-      var options = {
+      const options = {
         root: __dirname + '/public/',
         dotfiles: 'deny',
         headers: {
