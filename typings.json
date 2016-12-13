@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-dom": "registry:npm/react-dom#15.0.1+20160826174104"
+  }
+}

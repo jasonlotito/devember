@@ -1,32 +1,26 @@
-import React from 'react';
-import ParamList from './ParamList'
+import * as React from 'react';
+import * as ParamList from './ParamList'
 
 
 class CommandItem extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = this.fetchState();
-  }
-    fetchState() {
-    return {
-      data: {
-        command:     '',
-        description: '',
-        input:       {
-          params: []
-        },
-        output:      {
-          type: ''
-        }
+  state = {
+    data: {
+      command: '',
+      description: '',
+      input: {
+        params: any
+      },
+      output: {
+        type: ''
       }
     }
-  }
+  };
 
   componentDidMount() {
-    $.getJSON( '/command/' + this.props.params.command, data => this.setState( { data: data } ) );
+    $.getJSON('/command/' + this.props.params.command, data => this.setState({data: data}));
   }
 
-  render() {
+  render: any() {
     return (
       <div className="homePage">
         <h1>Command: {this.props.params.command}</h1>
